@@ -1,6 +1,5 @@
 plugins {
     id("java")
-    id("io.spring.dependency-management") version "1.1.4" apply false
 }
 
 allprojects {
@@ -14,7 +13,7 @@ subprojects {
     
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(22)
         }
     }
 }

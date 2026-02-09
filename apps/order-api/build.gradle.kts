@@ -1,10 +1,10 @@
 plugins {
     id("java")
-    id("org.springframework.boot") version "3.2.0"
-    id("io.spring.dependency-management") version "1.1.4"
+    alias(libs.plugins.spring.boot)
 }
 
 dependencies {
+    implementation(platform(libs.spring.boot.dependencies))
     implementation(project(":libs:contracts"))
     implementation(project(":libs:domain"))
     implementation(project(":libs:common"))
@@ -12,4 +12,9 @@ dependencies {
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.kafka)
     testImplementation(libs.junit)
+}
+
+
+springBoot {
+    mainClass.set("io.orderable.orderapi.Main")
 }
