@@ -4,6 +4,7 @@ junit = "4.13.2"
 spring-boot = "3.5.10"
 kafka = "3.6.0"
 jackson = "2.16.0"
+lombok = "1.18.42"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
@@ -12,6 +13,7 @@ spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { module = "junit:junit", version.ref = "junit" }
 spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
 spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
