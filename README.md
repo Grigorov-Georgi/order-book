@@ -77,5 +77,6 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 - [ ] Seed scripts
 
 ### Testing [P4]
+- [ ] Unit/Integration where needed
 - [ ] E2E
 - [ ] Performance/latency benchmarks
