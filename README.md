@@ -30,6 +30,10 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 - [ ] Dockerize
 - [ ] Readiness/Liveness probes
 
+### Libs [P0]
+- [ ] Add common classes
+- [ ] JPMS
+
 ### Kafka [P0]
 - [ ] Infra
 - [ ] OrderAPI Main Q
