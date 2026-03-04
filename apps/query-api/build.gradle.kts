@@ -10,3 +10,7 @@ dependencies {
     implementation(libs.spring.boot.starter.actuator)
     testImplementation(libs.junit)
 }
+
+springBoot {
+    mainClass.set("io.orderable.queryapi.Main")
+}

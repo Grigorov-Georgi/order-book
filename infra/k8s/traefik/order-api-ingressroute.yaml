@@ -1,0 +1,70 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: order-api-strip-user-id
+  namespace: order-book
+spec:
+  headers:
+    customRequestHeaders:
+      X-User-Id: ""
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: order-api-authn
+  namespace: order-book
+spec:
+  forwardAuth:
+    address: http://auth-service.order-book.svc.cluster.local:8080/verify
+    trustForwardHeader: false
+    authResponseHeaders:
+      - X-User-Id
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: order-api-routes
+  namespace: order-book
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`order.local`) && Path(`/orders/buy`) && Method(`POST`)
+      middlewares:
+        - name: order-api-strip-user-id
+        - name: order-api-authn
+      services:
+        - name: order-api
+          port: 8080
+    - kind: Rule
+      match: Host(`order.local`) && Path(`/orders/sell`) && Method(`POST`)
+      middlewares:
+        - name: order-api-strip-user-id
+        - name: order-api-authn
+      services:
+        - name: order-api
+          port: 8080
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: query-api-routes
+  namespace: order-book
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`order.local`) && Path(`/query/orders/symbol-range`) && Method(`GET`)
+      services:
+        - name: query-api
+          port: 8080
+    - kind: Rule
+      match: Host(`order.local`) && Path(`/query/orders/user`) && Method(`GET`)
+      middlewares:
+        - name: order-api-strip-user-id
+        - name: order-api-authn
+      services:
+        - name: query-api
+          port: 8080

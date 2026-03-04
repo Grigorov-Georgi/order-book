@@ -110,3 +110,21 @@ All services emit telemetry:
 - **traces**: request → command → worker processing → event emission
 
 Observability is not part of the critical path, but it's essential for diagnosing performance and correctness issues.
+
+## Kubernetes Deployment Entry Point
+
+Use one entry point for deploying the core services and Traefik routes:
+
+- `infra/k8s/kustomization.yaml`
+
+It includes:
+
+- namespace `order-book`
+- `order-api` deployment/service
+- `query-api` deployment/service
+- `orderbook-worker` deployment
+- Traefik middleware + routes for `order-api`
+
+Apply everything with:
+
+- `kubectl apply -k infra/k8s`

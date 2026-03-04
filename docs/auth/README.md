@@ -41,6 +41,48 @@ Important:
 - Gateway checks are necessary but not sufficient for domain security.
 - Downstream services must still validate authorization decisions for business actions.
 
+### Traefik as AuthN Entry Point
+
+This pattern is valid:
+
+- Traefik can enforce authN (JWT/OIDC or forward-auth).
+- After successful auth, Traefik can pass identity context (for example `userId`) in headers.
+- `OrderController` can read those headers and treat identity as already verified.
+
+Important guardrails:
+
+- Trust identity headers only on internal traffic that comes from Traefik.
+- Strip any client-supplied identity header at the edge, then set trusted headers in Traefik.
+- Block direct access to `order-api` (ClusterIP only, NetworkPolicy, no public exposure).
+- Keep service-level authZ checks in `order-api` (ownership, tenant, permissions), even when authN is enforced at the edge.
+
+In short: authenticated at edge, authorized in service.
+
+### Auth0 `sub` as User Key
+
+For this project, treat `X-User-Id` as the Auth0 `sub` claim.
+
+- `X-User-Id` value format is provider-based, for example `auth0|abc123`, `google-oauth2|123456789`.
+- Use this value as the external user key in services.
+- Optionally map it to an internal UUID in storage (for local prototype we derive a deterministic UUID from `sub`).
+- Do not let clients define this header; Traefik strips incoming values and forwards only trusted auth output.
+
+### Example Traefik Setup (Kubernetes)
+
+Added manifests:
+
+- `infra/k8s/order-api/deployment.yaml`
+- `infra/k8s/traefik/order-api-ingressroute.yaml`
+
+What this setup does:
+
+- Protects `POST /orders/buy` and `POST /orders/sell` with Traefik `forwardAuth`.
+- Exposes `GET /query/orders/symbol-range` publicly.
+- Protects `GET /query/orders/user` with Traefik `forwardAuth`.
+- Strips incoming `X-User-Id` from the original client request.
+- Accepts trusted `X-User-Id` only from the auth service response headers.
+- Forwards traffic to the Kubernetes `order-api` Service, which load-balances across all `order-api` pod replicas.
+
 ## 2) Order API and Query API: Domain Authorization
 
 `Order API` and `Query API` must enforce business rules that the gateway cannot fully know.

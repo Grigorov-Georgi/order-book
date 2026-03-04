@@ -6,6 +6,18 @@ This project is based on the article: [5 Proven Techniques for Ultra-Fast Low-La
 
 See [Architecture Documentation](docs/architecture/README.md) for detailed architecture diagrams and workflow documentation.
 
+## Spring Cloud Components
+
+### Spring Cloud Circuit Breaker (Resilience4j)
+- **Useful for**: Redis calls, DB queries, external API calls
+- **Purpose**: Prevents cascading failures in a low-latency system
+- **Verdict**: Use for external dependencies (Redis, PostgreSQL)
+
+### Spring Cloud Sleuth / Micrometer Tracing
+- **Useful for**: Distributed tracing across Kafka boundaries
+- **Purpose**: Provides observability across services
+- **Integration**: Works with Zipkin/Jaeger
+- **Verdict**: Use for observability
 
 ## Backlog
 
@@ -69,8 +81,11 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 - [ ] Build Dev 
 - [ ] Build Prod
 
+### Resilience [P2]
+- [ ] Spring Cloud Circuit Breaker (Resilience4j) for Redis/DB calls
+
 ### Monitoring [P3]
-- [ ] Tracing
+- [ ] Spring Cloud Sleuth / Micrometer Tracing
 - [ ] Logs Collection from my Workers
 - [ ] Logs Collection from PostgreSQL
 - [ ] Logs Collection from Kafka (mainly target -> DLQ)
