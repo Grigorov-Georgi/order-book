@@ -48,7 +48,7 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 
 ### Kafka [P0]
 - [ ] Infra
-- [ ] OrderAPI Main Q
+- [ ] OrderAPI Main Qll
 - [ ] OrderAPI Retry Q
 - [ ] OrderAPI DLQ
 - [ ] Worker Main Q
