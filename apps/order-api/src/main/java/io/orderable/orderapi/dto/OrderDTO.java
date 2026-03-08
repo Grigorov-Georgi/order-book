@@ -16,4 +16,5 @@ import java.math.BigDecimal;
 public class OrderDTO {
     private String symbol;
     private BigDecimal price;
+    private OrderType type;
 }
