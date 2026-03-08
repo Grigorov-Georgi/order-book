@@ -1,0 +1,73 @@
+services:
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: order-book-kafka
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_NODE_ID: 1 # Unique broker/controller ID in this KRaft cluster
+      KAFKA_PROCESS_ROLES: broker,controller # Run both broker and controller roles in one node
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093 # Bind internal and host listener sockets
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092 # Internal containers use kafka:9092, host uses localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT # Protocol per listener name
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT # Listener used for broker-to-broker traffic
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER # Listener used by KRaft controller quorum
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093 # Controller quorum members (nodeId@host:port)
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk # Static KRaft cluster ID used to format metadata log
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # Internal offsets topic replication for single-node dev
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1 # Transaction state topic replication for single-node dev
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1 # Minimum in-sync replicas for transaction state writes
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0 # Reduce initial consumer group rebalance wait in dev
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" # Auto-create topics when first referenced
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  order-api:
+    image: order-book/order-api:dev
+    pull_policy: never
+    container_name: order-book-order-api
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092 # Route producer traffic to Kafka container network address
+      KAFKA_ORDERS_TOPIC: orders # Topic where order commands are published
+      KAFKA_PRODUCER_RETRIES: 5 # Client retry attempts for transient produce failures
+      KAFKA_PRODUCER_RETRY_BACKOFF_MS: 200 # Delay between producer retry attempts
+      KAFKA_PRODUCER_SEND_TIMEOUT_MS: 5000 # Max wait in API thread for broker ack
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  order-web:
+    image: node:22-alpine
+    container_name: order-book-order-web
+    working_dir: /workspace/apps/order-web
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080 # Browser-facing URL for order-api from host machine
+      CHOKIDAR_USEPOLLING: "true" # Reliable file watching on Docker bind mounts
+    depends_on:
+      - order-api
+    volumes:
+      - ../:/workspace
+      - order-web-node-modules:/workspace/apps/order-web/node_modules
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.1.0
+    container_name: order-book-kafdrop
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092 # Kafka bootstrap server Kafdrop uses
+      SERVER_PORT: 9000 # HTTP port exposed by Kafdrop
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+volumes:
+  order-web-node-modules:

@@ -13,8 +13,9 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
-public class OrderDTO {
+public class CreateOrderRequest {
     private String symbol;
     private BigDecimal price;
+    private BigDecimal quantity;
     private OrderType type;
 }

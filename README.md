@@ -6,6 +6,24 @@ This project is based on the article: [5 Proven Techniques for Ultra-Fast Low-La
 
 See [Architecture Documentation](docs/architecture/README.md) for detailed architecture diagrams and workflow documentation.
 
+## Local Development
+
+1. Build the `order-api` Docker image:
+
+```bash
+./gradlew apps:order-api:jibDockerBuild --no-daemon
+```
+
+2. Start local services:
+
+```bash
+docker-compose -f infra/docker-compose.local.yml up
+```
+
+3. Access local apps:
+- FE: [http://localhost:5173/](http://localhost:5173/)
+- Kafdrop: [http://localhost:9000](http://localhost:9000)
+
 ## Spring Cloud Components
 
 ### Spring Cloud Circuit Breaker (Resilience4j)
@@ -24,9 +42,14 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 ### OrderAPI [P0]
 - [X] Buy/Sell Endpoints
 - [ ] Use Redis for Deduplication
-- [ ] Send Kafka Messages
-- [ ] Dockerize
+- [X] Send Kafka Messages
+- [X] Handle Kafka retries
+- [X] Dockerize
 - [ ] Readiness/Liveness probes
+
+### FE [P0]
+- [X] Vibe code it
+- [ ] Make it faster, because it's extriemly slow
 
 ### QueryAPI [P0]
 - [ ] Read Endpoint
@@ -36,6 +59,8 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 
 ### Worker [P0]
 - [ ] Receive Kafka Messages
+- [ ] Implement DLQ
+- [ ] Handle Kafka retries
 - [ ] Check Sender Balance
 - [ ] Send Order Message to Worker Kafka Q
 - [ ] Snapshot (not sure for this one)
@@ -94,6 +119,7 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 ### Generic [P3]
 - [ ] Swagger
 - [ ] Seed scripts
+- [ ] Use config server because the configurations for all of the services would be almost identical
 
 ### Testing [P4]
 - [ ] Unit/Integration where needed

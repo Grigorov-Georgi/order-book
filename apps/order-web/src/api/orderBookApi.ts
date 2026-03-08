@@ -58,6 +58,7 @@ const postOrder = async (path: string, payload: PlaceOrderPayload): Promise<void
   await apiClient.post(path, payload, {
     headers: {
       'X-Idempotency-Key': createIdempotencyKey(),
+      'X-User-Id': 'dev-user-placeholder', //TODO: will be removed later and traefic will nullify it this header is provided
     },
   })
 }

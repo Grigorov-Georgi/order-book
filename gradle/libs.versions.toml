@@ -5,9 +5,14 @@ spring-boot = "3.5.10"
 kafka = "3.6.0"
 jackson = "2.16.0"
 lombok = "1.18.42"
+protobuf = "3.25.3"
+protobuf-plugin = "0.9.4"
+jib-plugin = "3.5.1"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobuf-plugin" }
+jib = { id = "com.google.cloud.tools.jib", version.ref = "jib-plugin" }
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -19,3 +24,5 @@ spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-
 spring-kafka = { module = "org.springframework.kafka:spring-kafka" }
 kafka-clients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }

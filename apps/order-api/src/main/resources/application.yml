@@ -1,3 +1,25 @@
 application:
   title: OrderAPI
   version: 0.1.0;
+
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      acks: all
+      retries: ${KAFKA_PRODUCER_RETRIES:5}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      properties:
+        enable.idempotence: true
+        retry.backoff.ms: ${KAFKA_PRODUCER_RETRY_BACKOFF_MS:200}
+        delivery.timeout.ms: ${KAFKA_PRODUCER_DELIVERY_TIMEOUT_MS:120000}
+        request.timeout.ms: ${KAFKA_PRODUCER_REQUEST_TIMEOUT_MS:30000}
+        max.in.flight.requests.per.connection: 5
+
+app:
+  cors:
+    allowed-origins: ${ORDER_API_CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  kafka:
+    orders-topic: ${KAFKA_ORDERS_TOPIC:orders}
+    send-timeout-ms: ${KAFKA_PRODUCER_SEND_TIMEOUT_MS:5000}

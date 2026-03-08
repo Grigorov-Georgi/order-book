@@ -1,8 +1,9 @@
 package io.orderable.orderapi.controller;
 
 import io.orderable.orderapi.auth.UserIdentityMapper;
-import io.orderable.orderapi.dto.OrderDTO;
+import io.orderable.orderapi.dto.CreateOrderRequest;
 import io.orderable.orderapi.dto.OrderType;
+import io.orderable.orderapi.service.OrderProducerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -18,41 +19,47 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final UserIdentityMapper userIdentityMapper;
+        private final UserIdentityMapper userIdentityMapper;
+        private final OrderProducerService orderProducerService;
 
-    public OrderController(UserIdentityMapper userIdentityMapper) {
-        this.userIdentityMapper = userIdentityMapper;
-    }
+        public OrderController(UserIdentityMapper userIdentityMapper, OrderProducerService orderProducerService) {
+                this.userIdentityMapper = userIdentityMapper;
+                this.orderProducerService = orderProducerService;
+        }
 
-    @PostMapping("/buy")
-    ResponseEntity<String> buyOrder(@RequestBody OrderDTO orderDTO,
-            @RequestHeader(name = "X-Idempotency-Key", required = true) String idempotencyKey,
-            @RequestHeader(name = "X-User-Id", required = true) String authSub) {
+        @PostMapping("/buy")
+        ResponseEntity<String> buyOrder(@RequestBody CreateOrderRequest createOrderRequest,
+                        @RequestHeader(name = "X-Idempotency-Key", required = true) String idempotencyKey,
+                        @RequestHeader(name = "X-User-Id", required = true) String authSub) {
 
-        String externalUserKey = userIdentityMapper.toExternalUserKey(authSub);
-        UUID internalUserId = userIdentityMapper.toInternalUserId(authSub);
+                String externalUserKey = userIdentityMapper.toExternalUserKey(authSub);
+                UUID internalUserId = userIdentityMapper.toInternalUserId(authSub);
 
-        orderDTO.setType(OrderType.BUY);
-        log.info("buy order request: {}, externalUserKey={}, internalUserId={}", orderDTO, externalUserKey,
-                internalUserId);
+                createOrderRequest.setType(OrderType.BUY);
+                orderProducerService.sendOrder(createOrderRequest);
+                log.info("buy order request: {}, externalUserKey={}, internalUserId={}", createOrderRequest,
+                                externalUserKey,
+                                internalUserId);
 
-        return ResponseEntity.status(HttpStatusCode.valueOf(200))
-                .body("buy order requested");
-    }
+                return ResponseEntity.status(HttpStatusCode.valueOf(200))
+                                .body("buy order requested");
+        }
 
-    @PostMapping("/sell")
-    ResponseEntity<String> sellOrder(@RequestBody OrderDTO orderDTO,
-            @RequestHeader(name = "X-Idempotency-Key", required = true) String idempotencyKey,
-            @RequestHeader(name = "X-User-Id", required = true) String authSub) {
+        @PostMapping("/sell")
+        ResponseEntity<String> sellOrder(@RequestBody CreateOrderRequest createOrderRequest,
+                        @RequestHeader(name = "X-Idempotency-Key", required = true) String idempotencyKey,
+                        @RequestHeader(name = "X-User-Id", required = true) String authSub) {
 
-        String externalUserKey = userIdentityMapper.toExternalUserKey(authSub);
-        UUID internalUserId = userIdentityMapper.toInternalUserId(authSub);
+                String externalUserKey = userIdentityMapper.toExternalUserKey(authSub);
+                UUID internalUserId = userIdentityMapper.toInternalUserId(authSub);
 
-        orderDTO.setType(OrderType.SELL);
-        log.info("sell order request: {}, externalUserKey={}, internalUserId={}", orderDTO, externalUserKey,
-                internalUserId);
+                createOrderRequest.setType(OrderType.SELL);
+                orderProducerService.sendOrder(createOrderRequest);
+                log.info("sell order request: {}, externalUserKey={}, internalUserId={}", createOrderRequest,
+                                externalUserKey,
+                                internalUserId);
 
-        return ResponseEntity.status(HttpStatusCode.valueOf(200))
-                .body("sell order requested");
-    }
+                return ResponseEntity.status(HttpStatusCode.valueOf(200))
+                                .body("sell order requested");
+        }
 }
