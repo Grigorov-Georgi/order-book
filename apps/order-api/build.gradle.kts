@@ -45,6 +45,7 @@ jib {
     }
 }
 
+// jib have difficulties using gradle cache -> https://github.com/GoogleContainerTools/jib/issues/3132
 tasks.filter { it.name in setOf("jibDockerBuild", "jibBuildTar", "jib") }.onEach {
   it.notCompatibleWithConfigurationCache("Jib is not compatible with configuration cache")
 }
