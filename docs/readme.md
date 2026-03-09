@@ -39,12 +39,7 @@ Date: 2026-03-09
   - `order-api`
   - `orderbook-worker`
   - `query-api`
-- Updated GitHub Actions Java runtime from JDK 22 to JDK 21 to keep Gradle execution stable with wrapper `8.7`.
 
 ### Why
 - Enforce consistent Java formatting and prevent style drift across services.
-- Ensure each service is buildable and formatting-compliant on every PR.
-- Fix CI instability (`Unsupported class file major version 66`) caused by running Gradle `8.7` on JDK 22.
-
-### Follow-ups
-- If you want CI runtime on Java 22, upgrade Gradle wrapper to a version with full Java 22 runtime support.
+- Ensure each service is buildable and formatting-compliant on every PR
