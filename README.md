@@ -104,9 +104,9 @@ docker-compose -f infra/docker-compose.local.yml up
 - [ ] Persist Data from Worker Kafka Q
 
 ### CI/CD [P1]
-- [ ] Make Script
-- [ ] Spotless
-- [ ] CI pipeline (build, test, lint, security scan)
+- [X] Make Script
+- [X] Spotless
+- [X] CI pipeline (build, test, lint, security scan)
 - [ ] Docker image build/publish
 
 ### Authentication & Authorization [P2]
