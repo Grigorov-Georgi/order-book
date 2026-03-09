@@ -42,4 +42,4 @@ Date: 2026-03-09
 
 ### Why
 - Enforce consistent Java formatting and prevent style drift across services.
-- Ensure each service is buildable and formatting-compliant on every PR
+- Ensure each service is buildable and formatting-compliant on every PR.
