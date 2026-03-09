@@ -11,6 +11,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  order-web:
+    name: order-web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/order-web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: apps/order-web
+
+      - name: Lint order-web
+        run: npm run lint
+        working-directory: apps/order-web
+
   order-api:
     name: order-api
     runs-on: ubuntu-latest
@@ -85,6 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
+      - order-web
       - order-api
       - orderbook-worker
       - query-api
@@ -92,9 +116,10 @@ jobs:
     steps:
       - name: Fail if any service check failed
         run: |
-          if [ "${{ needs.order-api.result }}" != "success" ] || \
+          if [ "${{ needs.order-web.result }}" != "success" ] || \
+             [ "${{ needs.order-api.result }}" != "success" ] || \
              [ "${{ needs.orderbook-worker.result }}" != "success" ] || \
              [ "${{ needs.query-api.result }}" != "success" ]; then
-            echo "One or more Java service checks failed."
+            echo "One or more PR checks failed."
             exit 1
           fi
