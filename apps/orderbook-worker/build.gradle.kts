@@ -12,3 +12,7 @@ dependencies {
     implementation(libs.spring.kafka)
     testImplementation(libs.junit)
 }
+
+springBoot {
+    mainClass.set("io.orderable.orderbookworker.Main")
+}

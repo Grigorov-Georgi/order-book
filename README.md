@@ -8,6 +8,22 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 
 ## Local Development
 
+### Formatting
+
+Format a single service or library:
+
+```bash
+./gradlew :apps:order-api:spotlessCheck
+./gradlew :apps:order-api:spotlessApply
+```
+
+Format the whole Gradle repo:
+
+```bash
+./gradlew spotlessCheck
+./gradlew spotlessApply
+```
+
 1. Build the `order-api` Docker image:
 
 ```bash
