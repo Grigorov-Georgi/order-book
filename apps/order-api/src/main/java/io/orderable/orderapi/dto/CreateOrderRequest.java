@@ -1,12 +1,11 @@
 package io.orderable.orderapi.dto;
 
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -14,8 +13,8 @@ import java.math.BigDecimal;
 @ToString
 @AllArgsConstructor
 public class CreateOrderRequest {
-    private String symbol;
-    private BigDecimal price;
-    private BigDecimal quantity;
-    private OrderType type;
+  private String symbol;
+  private BigDecimal price;
+  private BigDecimal quantity;
+  private OrderType type;
 }

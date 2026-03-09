@@ -8,11 +8,13 @@ lombok = "1.18.42"
 protobuf = "3.25.3"
 protobuf-plugin = "0.9.4"
 jib-plugin = "3.5.1"
+spotless-plugin = "6.25.0"
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf-plugin" }
 jib = { id = "com.google.cloud.tools.jib", version.ref = "jib-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
