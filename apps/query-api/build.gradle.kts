@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":libs:common"))
     implementation(project(":libs:contracts"))
     implementation(project(":libs:domain"))
     implementation(libs.spring.boot.starter.web)

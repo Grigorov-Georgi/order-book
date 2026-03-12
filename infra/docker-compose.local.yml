@@ -18,7 +18,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1 # Transaction state topic replication for single-node dev
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1 # Minimum in-sync replicas for transaction state writes
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0 # Reduce initial consumer group rebalance wait in dev
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" # Auto-create topics when first referenced
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false" # Topics are provisioned explicitly via Terraform
     healthcheck:
       test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
       interval: 10s
