@@ -1,5 +1,6 @@
 package io.orderable.orderapi.service;
 
+import io.orderable.common.kafka.KafkaTopics;
 import io.orderable.contracts.proto.OrderCommand;
 import io.orderable.orderapi.dto.CreateOrderRequest;
 import io.orderable.orderapi.dto.OrderType;
@@ -17,7 +18,7 @@ public class OrderProducerService {
 
   public OrderProducerService(
       KafkaTemplate<String, byte[]> kafkaTemplate,
-      @Value("${app.kafka.orders-topic:orders}") String ordersTopic,
+      @Value("${app.kafka.orders-topic:" + KafkaTopics.ORDERS + "}") String ordersTopic,
       @Value("${app.kafka.send-timeout-ms:5000}") long sendTimeoutMs) {
     this.kafkaTemplate = kafkaTemplate;
     this.ordersTopic = ordersTopic;

@@ -8,6 +8,12 @@ See [Architecture Documentation](docs/architecture/README.md) for detailed archi
 
 ## Local Development
 
+Prerequisites:
+
+- Docker with `docker compose` or `docker-compose`
+- Terraform installed locally
+- Java 22
+
 ### Formatting
 
 Format a single service or library:
@@ -24,19 +30,19 @@ Format the whole Gradle repo:
 ./gradlew spotlessApply
 ```
 
-1. Build the `order-api` Docker image:
+1. Start local services with the bootstrap script. Do not run `docker-compose -f infra/docker-compose.local.yml up` directly, because the bootstrap flow builds the local service images first and then provisions Kafka topics through Terraform:
 
 ```bash
-./gradlew apps:order-api:jibDockerBuild --no-daemon
+./scripts/local-dev/bootstrap-local.sh
 ```
 
-2. Start local services:
+If you only want to rebuild the local service images without starting the stack:
 
 ```bash
-docker-compose -f infra/docker-compose.local.yml up
+./scripts/local-dev/build-local-images.sh
 ```
 
-3. Access local apps:
+2. Access local apps:
 - FE: [http://localhost:5173/](http://localhost:5173/)
 - Kafdrop: [http://localhost:9000](http://localhost:9000)
 
