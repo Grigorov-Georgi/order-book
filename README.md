@@ -95,12 +95,13 @@ If you only want to rebuild the local service images without starting the stack:
 
 ### Kafka [P0]
 - [ ] Infra
-- [ ] OrderAPI Main Qll
+- [X] OrderAPI Main Q
 - [ ] OrderAPI Retry Q
 - [ ] OrderAPI DLQ
 - [ ] Worker Main Q
 - [ ] Worker Retry Q
 - [ ] Worker DLQ
+- [ ] Log Aggregation + ElasticSearch and Kibana
 
 ### Redis [P0]
 - [ ] Infra
